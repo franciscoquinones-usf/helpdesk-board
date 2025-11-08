@@ -5,44 +5,72 @@
 import React from 'react';
 
 function badgeForPriority(p) {
-    const base = 'inline-block px-2';
-    switch(p) {
-        case 'Critical': return <span>{p}</span>
-        case 'High': return <span>{p}</span>
-        case 'Medium': return <span>{p}</span>
-        default: return <span>{p}</span>
-    }
+  const base = 'inline-block px-2 py-1 rounded text-xs font-semibold';
+  switch (p) {
+    case 'Critical':
+      return <span className={`${base} bg-red-700 text-white`}>{p}</span>;
+    case 'High':
+      return <span className={`${base} bg-orange-600 text-white`}>{p}</span>;
+    case 'Medium':
+      return <span className={`${base} bg-yellow-500 text-black`}>{p}</span>;
+    default:
+      return <span className={`${base} bg-green-600 text-white`}>{p}</span>;
+  }
 }
 
 function badgeForStatus(s) {
-    const base = 'inline-block px-2';
-    switch(s) {
-        case 'Open': return <span>{s}</span>
-        case 'In Progress': return <span>{s}</span>
-        case 'On Hold': return <span>{s}</span>
-        case 'Resolved': return <span>{s}</span>
-        default: return <span>{s}</span>
-    }
+  const base = 'inline-block px-2 py-1 rounded text-xs font-semibold';
+  switch (s) {
+    case 'Open':
+      return <span className={`${base} bg-blue-700 text-white`}>{s}</span>;
+    case 'In Progress':
+      return <span className={`${base} bg-purple-600 text-white`}>{s}</span>;
+    case 'On Hold':
+      return <span className={`${base} bg-gray-600 text-white`}>{s}</span>;
+    case 'Resolved':
+      return <span className={`${base} bg-green-600 text-white`}>{s}</span>;
+    default:
+      return <span className={`${base} bg-gray-500 text-white`}>{s}</span>;
+  }
 }
 
 export default function TicketCard({ticket, onAddToQueue, queued}) {
-    const {id, title, description, priority, status, assignee, updatedAt} = ticket; 
-    const updated = new Date(updatedAt).toLocaleString();
+  const {id, title, description, priority, status, assignee, updatedAt} = ticket;
+  const updated = new Date(updatedAt).toLocaleString();
 
-    return (
-        <><div>
-            <div>
-                <h3>{title}</h3>
-                <div>{badgeForPriority(priority)} {badgeForStatus(status)}</div>
+  return (
+    <div className="bg-[#1a1a1d] border border-gray-700 rounded-lg p-4 shadow-md text-white flex flex-col justify-between">
+      <div>
+        <div className="flex justify-between mb-2">
+            <div className="flex gap-2">
+            {badgeForPriority(priority)} {badgeForStatus(status)}
             </div>
-            <p>{description}</p>
-            <div>
-                <span>Assignee: {assignee}</span>
-                <span>Updated: {updated}</span>
-            </div>
-        </div><div>
-                <button onClick={() => onAddToQueue(id)} disabled={queued}>{queued ? 'In My Queue' : 'Add to My Queue'}</button>
-                {queued && <p>This ticket is already in your queue.</p>}
-            </div></>
-    )
+        </div>
+
+        <h3 className="text-lg font-semibold mb-1">{title}</h3>
+        <p className="text-sm text-gray-300 mb-2">{description}</p>
+
+        <div className="text-sm text-gray-400">
+            <p>Assignee: {assignee || 'Unassigned'}</p>
+            <p>Updated: {updated}</p>
+        </div>
+    </div>
+
+    <div className="mt-4">
+        <button onClick={() => onAddToQueue(id)} disabled={queued || status === 'Resolved'} className={`w-full py-2 rounded font-medium ${
+    status === 'Resolved'
+        ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+        : queued
+        ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+        : 'bg-blue-600 hover:bg-blue-700 text-white'
+  }`}
+>
+    {status === 'Resolved'? 'Resolved Ticket'
+        : queued
+        ? 'In My Queue'
+        : 'Add to My Queue'}
+    </button>
+    </div>
+    </div>
+  );
 }

@@ -60,7 +60,7 @@ export async function GET () {
   id: "t-1007",
   title: "No volume",
   description: "No volume outputting from computer.",
-  priority: "low",        // Low | Medium | High | Critical
+  priority: "Low",        // Low | Medium | High | Critical
   status: "In Progress",          // Open | In Progress | On Hold | Resolved
   assignee: "Adam",  // string
   updatedAt: "2025-10-31T18:05:00Z"

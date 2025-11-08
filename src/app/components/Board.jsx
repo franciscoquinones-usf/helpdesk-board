@@ -15,11 +15,10 @@ export default function Board() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({ status: 'All', priority: 'All' });
+  const [filters, setFilters] = useState({ status: 'All', priority: 'All'});
   const [search, setSearch] = useState('');
   const [queue, setQueue] = useState({});
 
-// Fetch Tickets
   useEffect(() => {
     async function fetchTickets() {
       try {
@@ -36,7 +35,6 @@ export default function Board() {
     fetchTickets();
   }, []);
 
-// Visible tickets
   const visibleTickets = tickets.filter((t) => {
     const statusMatch = filters.status === 'All' || t.status === filters.status;
     const priorityMatch = filters.priority === 'All' || t.priority === filters.priority;
@@ -46,8 +44,9 @@ export default function Board() {
     return statusMatch && priorityMatch && searchMatch;
   });
 
-// Queue Handlers
   function addToQueue(id) {
+    const target = tickets.find((t) => t.id === id);
+    if (target && target.status === 'Resolved') return;
     setQueue((prev) => ({ ...prev, [id]: true }));
   }
 
@@ -60,25 +59,37 @@ export default function Board() {
   }
 
   function clearQueue() {
+    const queuedIds = Object.keys(queue);
+    setTickets((prevTickets) =>
+      prevTickets.map((t) =>
+        queuedIds.includes(t.id) ? { ...t, status: 'Resolved' } : t
+      )
+    );
     setQueue({});
   }
 
-// Conditional States
-if (loading) return <StatusMessage type="Loading"/>;
-if (error) return <StatusMessage type="Error"/>;
+  if (loading) return <StatusMessage type="Loading"/>;
+  if (error) return <StatusMessage type="Error"/>;
 
-return (
-  <div>
-    <div>
-      <StatusFilter value={filters.status} onChange={(val) => setFilters({ ...filters, status: val })}/>
-      <PriorityFilter value={filters.priority} onChange={(val) => setFilters({ ...filters, priority: val })}/>
-      <SearchBox value={search} onChange={setSearch} />
+  return (
+    <div className="bg-black text-white p-6">
+      <div>
+        <h1 className="text-3xl font-bold mb-4">Helpdesk Ticket Board</h1>
+        <p className="flex gap-4 mb-6">Filter by status and priority, search by keyword, and add tickets to your queue.</p>
+        <div className="flex gap-4 mb-6">
+          <StatusFilter value={filters.status} onChange={(val) => setFilters({ ...filters, status: val })}/>
+          <PriorityFilter value={filters.priority} onChange={(val) => setFilters({ ...filters, priority: val })}/>
+          <SearchBox value={search} onChange={setSearch}/>
+        </div>
+      </div>
+
+      {visibleTickets.length === 0 ? (
+        <StatusMessage type="empty"/>
+      ) : (
+        <TicketList tickets={visibleTickets} onAddToQueue={addToQueue} queue={queue}/>
+      )}
+
+      <MyQueueSummary queue={queue} tickets={tickets} onRemove={removeFromQueue} onClear={clearQueue}/>
     </div>
-    {visibleTickets.length === 0 ? (
-      <StatusMessage type="empty"/>
-    ) : (
-      <TicketList tickets={visibleTickets} onAddToQueue={addToQueue} queue={queue}/>
-    )}
-    <MyQueueSummary tickets={tickets.filter((t) => queue[t.id])} onRemove={removeFromQueue} onClear={clearQueue}/>
-  </div>
-)}
+  );
+}
