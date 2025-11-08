@@ -4,7 +4,7 @@
 
 import React from 'react';
 export default function MyQueueSummary({queue, tickets, onRemove, onClear}) {
-    const queuedIds = Object.keys(queue);
+    const queuedIds = Object.keys(queue || {});
     const queuedTickets = queuedIds.map((id) => tickets.find((t) => t.id === id)).filter(Boolean);
 
     return ( 

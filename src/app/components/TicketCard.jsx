@@ -27,7 +27,7 @@ function badgeForStatus(s) {
 
 export default function TicketCard({ticket, onAddToQueue, queued}) {
     const {id, title, description, priority, status, assignee, updatedAt} = ticket; 
-    const updated = newDate(updatedAt).toLocaleString();
+    const updated = new Date(updatedAt).toLocaleString();
 
     return (
         <><div>
