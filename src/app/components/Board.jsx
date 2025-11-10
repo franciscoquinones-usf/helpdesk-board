@@ -35,6 +35,55 @@ export default function Board() {
     fetchTickets();
   }, []);
 
+// Live Updates
+
+  useEffect(() => {
+  if (tickets.length === 0) return;
+
+  const interval = setInterval(() => {
+    setTickets((prevTickets) => {
+      const updatable = prevTickets.filter(
+        (t) => t.status !== 'Resolved' && !queue[t.id] // skip resolved & queued
+      );
+
+      if (updatable.length === 0) return prevTickets;
+
+      const randomIndex = Math.floor(Math.random() * updatable.length);
+      const chosen = updatable[randomIndex];
+
+      const nextStatus = {
+        Open: 'In Progress',
+        'In Progress': 'On Hold',
+        'On Hold': 'Resolved',
+        Resolved: 'Open',
+      };
+      const nextPriority = {
+        Low: 'Medium',
+        Medium: 'High',
+        High: 'Critical',
+        Critical: 'Critical',
+      };
+
+      return prevTickets.map((t) => {
+        if (t.id !== chosen.id) return t;
+        const updated = { ...t };
+
+        if (Math.random() < 0.5) {
+          updated.status = nextStatus[t.status] || t.status;
+        } else {
+          updated.priority = nextPriority[t.priority] || t.priority;
+        }
+
+        updated.updatedAt = new Date().toISOString();
+        return updated;
+      });
+    });
+  }, 9000);
+
+  return () => clearInterval(interval);
+}, [tickets, queue]);
+
+
   const visibleTickets = tickets.filter((t) => {
     const statusMatch = filters.status === 'All' || t.status === filters.status;
     const priorityMatch = filters.priority === 'All' || t.priority === filters.priority;

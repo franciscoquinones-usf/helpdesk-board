@@ -7,7 +7,7 @@ export default function Searchbox({value, onChange}) {
     return ( 
         <label>
             <span>Search: </span>
-            <input type="text" placeholder="Search title or description" value={value} onChange={(e) => onChange(e.target.value)} className="w-[28rem]"/>
+            <input type="text" placeholder="Search title or description" value={value} onChange={(e) => onChange(e.target.value)} className="w-[14rem]"/>
         </label>
     );
 }

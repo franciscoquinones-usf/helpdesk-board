@@ -86,7 +86,7 @@ export async function GET () {
 {
   id: "t-1010",
   title: "Can't log in",
-  description: "User reports intermittent VPN connectivity errors.",
+  description: "Forgot password.",
   priority: "High",        // Low | Medium | High | Critical
   status: "Open",          // Open | In Progress | On Hold | Resolved
   assignee: "Unassigned",  // string

@@ -8,13 +8,13 @@ function badgeForPriority(p) {
   const base = 'inline-block px-2 py-1 rounded text-xs font-semibold';
   switch (p) {
     case 'Critical':
-      return <span className={`${base} bg-red-700 text-white`}>{p}</span>;
+      return <span className={`${base} bg-red-600 text-white`}>Priority: {p}</span>;
     case 'High':
-      return <span className={`${base} bg-orange-600 text-white`}>{p}</span>;
+      return <span className={`${base} bg-orange-600 text-white`}>Priority:{p}</span>;
     case 'Medium':
-      return <span className={`${base} bg-yellow-500 text-black`}>{p}</span>;
+      return <span className={`${base} bg-yellow-500 text-black`}>Priority:{p}</span>;
     default:
-      return <span className={`${base} bg-green-600 text-white`}>{p}</span>;
+      return <span className={`${base} bg-green-600 text-white`}>Priority:{p}</span>;
   }
 }
 
@@ -22,15 +22,15 @@ function badgeForStatus(s) {
   const base = 'inline-block px-2 py-1 rounded text-xs font-semibold';
   switch (s) {
     case 'Open':
-      return <span className={`${base} bg-blue-700 text-white`}>{s}</span>;
+      return <span className={`${base}`}>Status: {s}</span>;
     case 'In Progress':
-      return <span className={`${base} bg-purple-600 text-white`}>{s}</span>;
+      return <span className={`${base}`}>Status: {s}</span>;
     case 'On Hold':
-      return <span className={`${base} bg-gray-600 text-white`}>{s}</span>;
+      return <span className={`${base}`}> Status: {s}</span>;
     case 'Resolved':
-      return <span className={`${base} bg-green-600 text-white`}>{s}</span>;
+      return <span className={`${base}`}>Status: {s}</span>;
     default:
-      return <span className={`${base} bg-gray-500 text-white`}>{s}</span>;
+      return <span className={`${base}`}>Status: {s}</span>;
   }
 }
 
